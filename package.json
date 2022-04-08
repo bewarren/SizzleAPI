@@ -1,0 +1,27 @@
+{
+  "name": "SizzleAPI",
+  "version": "1.0.0",
+  "description": "Sizzle's Express Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bewarren/SizzleAPI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bewarren/SizzleAPI/issues"
+  },
+  "homepage": "https://github.com/bewarren/SizzleAPI#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.9"
+  },
+  "type": "module"
+}
