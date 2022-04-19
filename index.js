@@ -30,10 +30,18 @@ app.get("/users", async (req, res) => {
 
 app.get("/users/:id", async (req, res) => {
   const id = req.params.id;
-  const users = await User.findOne({ _id: id });
-  res.send(users);
+  const user = await User.findOne({ _id: id });
+  res.send(user);
 });
 
-app.listen(3000, "10.20.2.199", () => {
+app.post("/users/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(req.body);
+  // console.log(res.json({ requestBody: req.body }));
+  const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+  res.send(user);
+});
+
+app.listen(3000, "10.20.2.149", () => {
   console.log("listening on port 3000");
 });
