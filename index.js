@@ -24,7 +24,6 @@ app.use(urlencoded({ extended: true }));
 
 app.get("/users", async (req, res) => {
   const users = await User.find({});
-  console.log(users);
   res.send(users);
 });
 
@@ -36,10 +35,40 @@ app.get("/users/:id", async (req, res) => {
 
 app.post("/users/:id", async (req, res) => {
   const id = req.params.id;
-  console.log(req.body);
-  // console.log(res.json({ requestBody: req.body }));
   const user = await User.findByIdAndUpdate(id, req.body, { new: true });
   res.send(user);
+});
+
+app.post("/payment/:toId/:fromId", async (req, res) => {
+  const { toId, fromId } = req.params;
+  const { amount } = req.body;
+
+  // const session = await User.startSession();
+  // session.startTransaction();
+
+  try {
+    const opts = { new: true };
+
+    const from = await User.findOneAndUpdate(
+      { _id: fromId },
+      { $inc: { balance: -amount } },
+      opts
+    );
+
+    const to = await User.findOneAndUpdate(
+      { _id: toId },
+      { $inc: { balance: amount } },
+      opts
+    );
+
+    // await session.commitTransaction();
+    // session.endSession();
+    res.send({ to: to, from: from, amount: amount });
+  } catch (error) {
+    // await session.abortTransaction();
+    // session.endSession();
+    throw error;
+  }
 });
 
 app.listen(3000, "10.20.2.149", () => {
