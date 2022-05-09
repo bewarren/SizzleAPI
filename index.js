@@ -71,6 +71,6 @@ app.post("/payment/:toId/:fromId", async (req, res) => {
   }
 });
 
-app.listen(3000, "10.20.2.149", () => {
-  console.log("listening on port 3000");
+app.listen(8080, () => {
+  console.log("listening on port 8080");
 });
