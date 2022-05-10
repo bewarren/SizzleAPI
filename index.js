@@ -4,6 +4,7 @@ import cors from "cors";
 import session from "express-session";
 import passport from "passport";
 import LocalStrategy from "passport-local";
+import methodOverride from "method-override";
 
 import User from "./models/users.js";
 
@@ -26,6 +27,7 @@ app.use(cors());
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 app.use(
   session({
@@ -45,23 +47,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use("/users", userRoutes);
-
-app.get("/users", async (req, res) => {
-  const users = await User.find({});
-  res.send(users);
-});
-
-app.get("/users/:id", async (req, res) => {
-  const id = req.params.id;
-  const user = await User.findOne({ _id: id });
-  res.send(user);
-});
-
-app.post("/users/:id", async (req, res) => {
-  const id = req.params.id;
-  const user = await User.findByIdAndUpdate(id, req.body, { new: true });
-  res.send(user);
-});
 
 app.post("/payment/:toId/:fromId", async (req, res) => {
   const { toId, fromId } = req.params;
