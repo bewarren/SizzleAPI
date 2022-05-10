@@ -1,11 +1,21 @@
 import mongoose from "mongoose";
+import passportLocalMongoose from "passport-local-mongoose";
 
 const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
-  name: {
+  firstName: {
     type: String,
     required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
   },
   balance: {
     type: Number,
@@ -13,6 +23,8 @@ const userSchema = new Schema({
     min: 0,
   },
 });
+
+userSchema.plugin(passportLocalMongoose);
 
 const User = model("User", userSchema);
 
