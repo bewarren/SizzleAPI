@@ -46,17 +46,6 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use("/users", userRoutes);
 
-app.get("/fakeMakeUser", async (req, res) => {
-  const user = new User({
-    email: "test2@gmail.com",
-    username: "beeeen2",
-    firstName: "Ben2",
-    lastName: "Warren2",
-  });
-  const newUser = await User.register(user, "chicken");
-  res.send(newUser);
-});
-
 app.get("/users", async (req, res) => {
   const users = await User.find({});
   res.send(users);
