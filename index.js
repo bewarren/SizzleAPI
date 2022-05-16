@@ -70,9 +70,11 @@ app.post("/payment/:toId/:fromId", async (req, res) => {
       opts
     );
 
+    const people = await User.find({});
+
     // await session.commitTransaction();
     // session.endSession();
-    res.send({ to: to, from: from, amount: amount });
+    res.send({ to: to, from: from, amount: amount, people: people });
   } catch (error) {
     // await session.abortTransaction();
     // session.endSession();
