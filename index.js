@@ -41,7 +41,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new LocalStrategy(User.authenticate())); // hi passport, use local strategy on User Model
+passport.use(User.createStrategy()); // hi passport, use local strategy on User Model
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());

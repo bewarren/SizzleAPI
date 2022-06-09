@@ -16,10 +16,14 @@ router.post("/register", async (req, res) => {
   res.send(registeredUser);
 });
 
-router.post("/login", passport.authenticate("local"), async (req, res) => {
-  const user = await User.findOne({ username: req.body.username });
-  res.send(user);
-});
+router.post(
+  "/login",
+  passport.authenticate("local", { failureMessage: true }),
+  async (req, res) => {
+    const user = await User.findOne({ username: req.body.username });
+    res.send(user);
+  }
+);
 
 router.get("/logout", (req, res) => {
   req.logout();
