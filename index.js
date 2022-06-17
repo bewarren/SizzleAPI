@@ -7,8 +7,10 @@ import LocalStrategy from "passport-local";
 import methodOverride from "method-override";
 
 import User from "./models/users.js";
+import Transaction from "./models/transactions.js";
 
 import userRoutes from "./routes/users.js";
+import transactionRoutes from "./routes/transactions.js";
 
 const { connect } = mongoose;
 
@@ -47,42 +49,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use("/users", userRoutes);
-
-app.post("/payment/:toId/:fromId", async (req, res) => {
-  const { toId, fromId } = req.params;
-  const { amount, routeName } = req.body;
-
-  // const session = await User.startSession();
-  // session.startTransaction();
-
-  console.log(routeName);
-
-  try {
-    const opts = { new: true };
-
-    const from = await User.findOneAndUpdate(
-      { _id: fromId },
-      { $inc: { balance: -amount } },
-      opts
-    );
-
-    const to = await User.findOneAndUpdate(
-      { _id: toId },
-      { $inc: { balance: amount } },
-      opts
-    );
-
-    const people = await User.find({});
-
-    // await session.commitTransaction();
-    // session.endSession();
-    res.send({ to: to, from: from, amount: amount, people: people });
-  } catch (error) {
-    // await session.abortTransaction();
-    // session.endSession();
-    throw error;
-  }
-});
+app.use("/transactions", transactionRoutes);
 
 app.listen(8080, () => {
   console.log("listening on port 8080");
