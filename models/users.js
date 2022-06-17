@@ -24,6 +24,9 @@ const userSchema = new Schema({
   },
 });
 
+// want transactions linked here
+// want pending, completed, and rejected transactions
+
 userSchema.plugin(passportLocalMongoose);
 
 const User = model("User", userSchema);

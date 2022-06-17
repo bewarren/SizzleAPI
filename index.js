@@ -50,10 +50,12 @@ app.use("/users", userRoutes);
 
 app.post("/payment/:toId/:fromId", async (req, res) => {
   const { toId, fromId } = req.params;
-  const { amount } = req.body;
+  const { amount, routeName } = req.body;
 
   // const session = await User.startSession();
   // session.startTransaction();
+
+  console.log(routeName);
 
   try {
     const opts = { new: true };
