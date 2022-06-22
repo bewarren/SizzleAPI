@@ -19,6 +19,10 @@ const transactionSchema = new Schema({
     type: Date,
     required: true,
   },
+  isCompleted: {
+    type: Boolean,
+    required: false, // will need to change to true later
+  },
 });
 
 const Transaction = model("Transaction", transactionSchema);

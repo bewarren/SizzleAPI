@@ -17,14 +17,89 @@ router.get("/:id", async (req, res) => {
   res.send(transactions);
 });
 
+router.post("/request/:toId/:fromId", async (req, res) => {
+  const { toId, fromId } = req.params;
+  const { amount } = req.body;
+
+  try {
+    const opts = { new: true };
+
+    const from = await User.findById(fromId);
+    const to = await User.findById(toId);
+
+    const date = new Date();
+
+    const transaction = new Transaction({
+      amount: amount,
+      date: date,
+      isCompleted: false,
+    });
+
+    transaction.to = to;
+    transaction.from = from;
+
+    transaction.save().catch((err) => {
+      console.log("Error");
+      console.log(err);
+    });
+
+    // await session.commitTransaction();
+    // session.endSession();
+    res.send({ to: to, from: from, amount: amount });
+  } catch (error) {
+    // await session.abortTransaction();
+    // session.endSession();
+    throw error;
+  }
+});
+
+router.put("/settle/:transactionId", async (req, res) => {
+  const { transactionId } = req.params;
+
+  try {
+    const opts = { new: true };
+
+    const transaction = await Transaction.findByIdAndUpdate(
+      transactionId,
+      {
+        isCompleted: true,
+      },
+      opts
+    );
+
+    const from = await User.findOneAndUpdate(
+      { _id: transaction.from._id },
+      { $inc: { balance: -transaction.amount } },
+      opts
+    );
+
+    const to = await User.findOneAndUpdate(
+      { _id: transaction.to._id },
+      { $inc: { balance: transaction.amount } },
+      opts
+    );
+
+    const people = await User.find({}); // rather update in redux
+    const transactions = await Transaction.find({}); // rather update in redux
+
+    res.send({
+      to: to,
+      from: from,
+      people: people,
+      transactions: transactions,
+    });
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+});
+
 router.post("/:toId/:fromId", async (req, res) => {
   const { toId, fromId } = req.params;
-  const { amount, routeName } = req.body;
+  const { amount } = req.body;
 
   // const session = await User.startSession();
   // session.startTransaction();
-
-  console.log(routeName);
 
   try {
     const opts = { new: true };
@@ -41,17 +116,18 @@ router.post("/:toId/:fromId", async (req, res) => {
       opts
     );
 
-    const people = await User.find({});
-
     const date = new Date();
 
     const transaction = new Transaction({
       amount: amount,
       date: date,
+      isCompleted: true,
     });
 
     transaction.to = to;
     transaction.from = from;
+
+    const people = await User.find({}); // need to update all balances
 
     transaction.save().catch((err) => {
       console.log("Error");
