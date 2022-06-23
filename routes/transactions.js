@@ -67,24 +67,25 @@ router.put("/settle/:transactionId", async (req, res) => {
       opts
     );
 
-    const from = await User.findOneAndUpdate(
-      { _id: transaction.from._id },
+    const from = await User.findByIdAndUpdate(
+      transaction.from._id,
       { $inc: { balance: -transaction.amount } },
       opts
     );
 
-    const to = await User.findOneAndUpdate(
-      { _id: transaction.to._id },
+    const to = await User.findByIdAndUpdate(
+      transaction.to._id,
       { $inc: { balance: transaction.amount } },
       opts
     );
 
-    const people = await User.find({}); // rather update in redux
-    const transactions = await Transaction.find({}); // rather update in redux
+    const people = await User.find({});
+    const transactions = await Transaction.find({});
 
     res.send({
       to: to,
       from: from,
+      amount: transaction.amount,
       people: people,
       transactions: transactions,
     });
