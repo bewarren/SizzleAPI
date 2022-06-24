@@ -1,19 +1,23 @@
+// if (process.env.NODE_ENV !== "production") {
+
+// }
+import "dotenv/config";
 import express, { json, urlencoded } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import session from "express-session";
 import passport from "passport";
-import LocalStrategy from "passport-local";
 import methodOverride from "method-override";
 
 import User from "./models/users.js";
-import Transaction from "./models/transactions.js";
 
 import userRoutes from "./routes/users.js";
 import transactionRoutes from "./routes/transactions.js";
 
 const { connect } = mongoose;
 
+// const dbURL = process.env.DB_URL;
+// "mongodb://localhost:27017/users";
 connect("mongodb://localhost:27017/users")
   .then(() => {
     console.log("Mongo Connection");
