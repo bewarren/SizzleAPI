@@ -16,9 +16,9 @@ import transactionRoutes from "./routes/transactions.js";
 
 const { connect } = mongoose;
 
-// const dbURL = process.env.DB_URL;
+const dbURL = process.env.DB_URL;
 // "mongodb://localhost:27017/users";
-connect("mongodb://localhost:27017/users")
+connect(dbURL)
   .then(() => {
     console.log("Mongo Connection");
   })
