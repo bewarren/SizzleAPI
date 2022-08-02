@@ -8,6 +8,9 @@ import cors from "cors";
 import session from "express-session";
 import passport from "passport";
 import methodOverride from "method-override";
+import http from "http";
+import https from "https";
+import fs from "fs";
 
 import User from "./models/users.js";
 
@@ -15,6 +18,9 @@ import userRoutes from "./routes/users.js";
 import transactionRoutes from "./routes/transactions.js";
 
 const { connect } = mongoose;
+
+const key = fs.readFileSync("./localhost-key.pem", "utf8");
+const cert = fs.readFileSync("./localhost.pem", "utf8");
 
 const dbURL = process.env.DB_URL;
 // "mongodb://localhost:27017/users";
@@ -55,6 +61,13 @@ passport.deserializeUser(User.deserializeUser());
 app.use("/users", userRoutes);
 app.use("/transactions", transactionRoutes);
 
-app.listen(8080, () => {
-  console.log("listening on port 8080");
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer({ key: key, cert: cert }, app);
+
+httpServer.listen(8080, () => {
+  console.log("Http server listening on port 8080");
+});
+
+httpsServer.listen(8443, () => {
+  console.log("Https server listening on port 8443");
 });
